@@ -4,6 +4,8 @@ from category.models import Category
 from .models import Product
 from cart.models import Cart, CartItem
 
+from django.core.paginator import Page, PageNotAnInteger,Paginator
+
 from cart.views import _cart_id
 
 # Create your views here.
@@ -14,15 +16,27 @@ def store(request, category_slug=None):
     if category_slug != None:
         categories = get_object_or_404(Category, slug = category_slug) # It calls get() on given model manager (Category class here) with slug field, and raises Http404instead ModelDoesnotExist error
         products = Product.objects.filter(category=categories, is_available=True)
+
+         # inititating paginator functionality for "Product categories" with the above query.
+        paginator = Paginator(products, 3) 
+        page = request.GET.get('page') 
+        paged_products = paginator.get_page(page) 
+
         product_count = products.count()
     else:
         products = Product.objects.all().filter(is_available=True)
+        
+        # inititating paginator functionality for "All Products" with the above query.
+        paginator = Paginator(products, 2) # Implementing paginator here, we want to display 6 products in one page
+        page = request.GET.get('page') # the "page" parameter will come from the url i.e. we will capture it from 127.0.0.1:8000/store/?page=2 or 127.0.0.1:8000/store/?page=3 etc
+        paged_products = paginator.get_page(page) # We got the 6 products per page here and this "paged_products" will be passed in the template
+        
         product_count = products.count()
 
     context= {
-    'products': products, 
+    'products': paged_products, 
     'product_count':product_count
-    }
+    } #Instead of passing total products, we are passing the Paginator's -> paged_product here 
 
 
     return render(request,'store.html', context )
