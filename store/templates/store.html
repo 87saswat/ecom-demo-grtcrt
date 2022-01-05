@@ -8,8 +8,12 @@
 
 <!-- ========================= SECTION PAGETOP ========================= -->
 <section class="section-pagetop bg">
+{% if 'search' in request.path %}	
+<h2 class="title-page">Search Results</h2>
+{% else %}
 <div class="container">
 	<h2 class="title-page">Our Store</h2>
+{% endif %}	
 	
 </div> <!-- container //  -->
 </section>
@@ -129,6 +133,7 @@
 </header><!-- sect-heading -->
 
 <div class="row">
+	{% if products %}
 	{% for product in products %}
 	<div class="col-md-4">
 		<figure class="card card-product-grid">
@@ -153,6 +158,11 @@
 	</div> <!-- col.// -->
 
 	{% endfor %}
+	{% else %}
+		<div>
+			<h3>No results found !! Please try again</h3>
+		</div>
+	{% endif %}
 </div> <!-- row end.// -->
 
 <!-- Inplementing Django Paginator functionality on bootstrap Paginator -->
