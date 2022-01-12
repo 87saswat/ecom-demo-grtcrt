@@ -79,7 +79,11 @@ def cart(request, total = 0, quantity = 0, cart_items = None):
         
         gst = (5*total)/100    
         grand_total = total+gst                           
+<<<<<<< HEAD
     except ObjectDoesNotExist:
+=======
+    except ObjectDoesNotExist:     #Import it from django.core.exceptions
+>>>>>>> b9eaebbe76985f2e33c39510c1edd609b3a466ff
         pass        # Just ignore
 
     context = {
